@@ -1,40 +1,53 @@
-<!--
+<!doctype html>
 
-Please note that this is only a temporary solution.
-Full implementation of this website coming soon.
-
--->
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Media Downloader</title>
-    <style type="text/css">
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-        }
-        
-        #content {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            top: 0px;
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>YouTube Downloader</title>
+
 </head>
 
 <body>
-    <div id="content">
-        <iframe width="100%" height="100%" frameborder="0" src="https://s.codepen.io/Richienb/debug/GXwZgW/vPMKKzNNKVJM" />
-    </div>
+    <div class="demo-layout mdl-layout mdl-layout--fixed-header mdl-js-layout mdl-color--grey-100">
+
+        <div class="demo-ribbon"></div>
+        <main class="demo-main mdl-layout__content">
+            <div class="demo-container mdl-grid">
+                <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+                <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
+
+                    <h3>Media Downloader</h3>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="url_input" class="mdl-textfield__input" id="sample3" type="url" onkeyup="getinfo()" onchange="getinfo()" required>
+                        <label class="mdl-textfield__label" for="sample3">Media URL</label>
+                    </div>
+
+                    <p id="validplz">Please specify a valid media url.</p>
+                    <section>
+                        <h5 id="title"></h5>
+                    </section>
+                    <br>
+                    <section><img id="thumbnail"></img>
+                    </section>
+                    <br>
+                    <section id="urls">
+                    </section>
+                </div>
+
+        </main>
+
+        </div>
+        <script async defer src='https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.min.js'></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+        <script src="js/index.js"></script>
+
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Material+Icons|Roboto:300,400,500,700'>
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-red.min.css'>
+        <link rel="stylesheet" href="css/style.css">
 </body>
 
 </html>
