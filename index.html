@@ -90,26 +90,15 @@
         document.getElementById("video-url").addEventListener("input", function() {
             if (document.getElementById("video-url").validity.valid) {
                 $("#progress-bar").removeClass("mdc-linear-progress--closed");
-                $.when(
-                    $.getJSON(
-                        "https://www.saveoffline.com/process/?url=" +
-                        $("#video-url").val() +
-                        "&type=json",
-                        function(data) {
-                            var myNode = document.getElementById("links-list");
-                            while (myNode.firstChild) {
-                                if (window.CP.shouldStopExecution(0)) break;
-                                myNode.removeChild(myNode.firstChild);
-                            }
-                            window.CP.exitedLoop(0);
-                            for (var i = 0; i < data.urls.length; i++) {
-                                if (window.CP.shouldStopExecution(1)) break;
-                                $("#links-list").append('<a class="mdc-list-item" href="' + data.urls[i].id + '" tabindex="0" data-mdc-auto-init="MDCRipple"><span class="mdc-list-item__text">' + data.urls[i].label + '</span></a>');
-                            }
-                            window.CP.exitedLoop(1);
-                        })).
-
-                then(function() {
+                $.when($.getJSON("https://www.saveoffline.com/process/?url=" + $("#video-url").val() + "&type=json", function(data) {
+                    let myNode = document.getElementById("links-list");
+                    while (myNode.firstChild) {
+                        myNode.removeChild(myNode.firstChild);
+                    }
+                    for (var i = 0; i < data.urls.length; i++) {
+                        $("#links-list").append('<a class="mdc-list-item" href="' + data.urls[i].id + '" tabindex="0" data-mdc-auto-init="MDCRipple"><span class="mdc-list-item__text">' + data.urls[i].label + '</span></a>');
+                    }
+                })).then(function() {
                     window.mdc.autoInit();
                     $("#progress-bar").addClass("mdc-linear-progress--closed");
                 });
