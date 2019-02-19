@@ -9,11 +9,11 @@
     <meta name="theme-color" content="#3F51B5">
 
     <title>ROS YouTube Video Downloader</title>
-    <meta name="description" content="This is a YouTube video downloader.">
+    <meta name="description" content="A tool that provides links to download YouTube videos in different qualities.">
 
     <link rel="shortcut icon" href="favicon.ico">
 
-    <link rel='stylesheet' href='https://unpkg.com/material-components-web@0.42.0/dist/material-components-web.min.css'>
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@0.44.0/dist/material-components-web.min.css">
 
     <style>
         :root {
@@ -24,39 +24,48 @@
         }
         
         :root body {
-            background-color: #3f51b5;
+            background-color: #fafafa;
         }
         
-        :root body main {
+        :root body .ribbon {
+            top: 0;
+            z-index: -1;
+            background-color: #3f51b5;
+            width: 100%;
+            height: 10rem;
+            position: absolute;
+        }
+        
+        :root body .main-content {
             background-color: #ffffff;
             border-radius: 4px;
-            position: absolute;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            margin-left: 20px;
-            margin-right: 20px;
-            min-width: calc(100vw - 80px);
-            min-height: calc(100vh - 80px);
+            margin: 20px;
             padding: 20px;
+            min-height: calc(100vh - 80px);
         }
         
-        #video-url-div {
+        :root body .main-content .url--input {
             width: 100%;
+        }
+        
+        :root body .main-content .url--progress {
+            position: fixed;
+            bottom: 0;
         }
     </style>
 
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500'>
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
 
 </head>
 
 <body>
-
-    <main class="mdc-typography">
-        <h1 class="mdc-typography--headline1">ROS YouTube Video Downloader</h1>
-        <p class="mdc-typography--body1">This is a YouTube video downloader.</p>
-        <div id="video-url-div" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
-            <input id="video-url" type="text" pattern="(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\-_]+)" id="tf-outlined" class="mdc-text-field__input" required>
+    <div class="ribbon mdc-elevation--z4"></div>
+    <main class="main-content mdc-typography mdc-elevation--z8">
+        <h1 class="mdc-typography--headline2">ROS YouTube Video Downloader</h1>
+        <p class="mdc-typography--body1">A tool that provides links to download YouTube videos in different qualities.</p>
+        <div class="url--input mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+            <input type="text" pattern="(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\-_]+)" id="tf-outlined" class="mdc-text-field__input" required>
             <div class="mdc-notched-outline">
                 <div class="mdc-notched-outline__leading"></div>
                 <div class="mdc-notched-outline__notch">
@@ -64,43 +73,66 @@
                 </div>
                 <div class="mdc-notched-outline__trailing"></div>
             </div>
-        </div>
-        <br>
-        <br>
-        <div id="progress-bar" role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed">
-            <div class="mdc-linear-progress__buffering-dots"></div>
-            <div class="mdc-linear-progress__buffer"></div>
-            <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
-                <span class="mdc-linear-progress__bar-inner"></span>
-            </div>
-            <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
-                <span class="mdc-linear-progress__bar-inner"></span>
+            <div role="progressbar" class="url--progress mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed" data-mdc-auto-init="MDCLinearProgress">
+                <div class="mdc-linear-progress__buffering-dots"></div>
+                <div class="mdc-linear-progress__buffer"></div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
             </div>
         </div>
-        <ul id="links-list" class="mdc-list">
+
+        <ul class="url--list mdc-list">
         </ul>
     </main>
-    <script async src='https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
-    <script src='https://unpkg.com/material-components-web@0.42.0/dist/material-components-web.min.js'></script>
+
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+    <script src="https://unpkg.com/material-components-web@0.44.0/dist/material-components-web.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script>
-        window.mdc.autoInit();
+        mdc.autoInit();
 
-        document.getElementById("video-url").addEventListener("input", function() {
-            if (document.getElementById("video-url").validity.valid) {
-                $("#progress-bar").removeClass("mdc-linear-progress--closed");
-                $.when($.getJSON("https://www.saveoffline.com/process/?url=" + $("#video-url").val() + "&type=json", function(data) {
-                    let myNode = document.getElementById("links-list");
-                    while (myNode.firstChild) {
-                        myNode.removeChild(myNode.firstChild);
-                    }
-                    for (var i = 0; i < data.urls.length; i++) {
-                        $("#links-list").append('<a class="mdc-list-item" href="' + data.urls[i].id + '" tabindex="0" data-mdc-auto-init="MDCRipple"><span class="mdc-list-item__text">' + data.urls[i].label + '</span></a>');
-                    }
-                })).then(function() {
-                    window.mdc.autoInit();
-                    $("#progress-bar").addClass("mdc-linear-progress--closed");
+        $(".url--input input").on("input", function() {
+            if ($(".url--input input").get(0).validity.valid) {
+                $(".url--progress").
+                get(0).
+                MDCLinearProgress.open();
+                $.when(
+                    $.getJSON(
+                        "https://www.saveoffline.com/process/", {
+                            url: $(".url--input").get(0).MDCTextField.value,
+                            type: "json"
+                        },
+
+                        function(data) {
+                            $(".url--list").empty();
+                            $(data.urls).each(function(i) {
+                                if (i === 0) {
+                                    $(".url--list").append("<a class=\"mdc-list-item\" tabindex=\"0\" href=\"" +
+
+                                        data.urls[i].id + "\" data-mdc-auto-init=\"MDCRipple\"><span class=\"mdc-list-item__text\">" +
+
+                                        data.urls[i].label + "</span></a>");
+
+                                } else {
+                                    $(".url--list").append("<a class=\"mdc-list-item\" href=\"" +
+                                        data.urls[i].id + "\" data-mdc-auto-init=\"MDCRipple\">\n    <span class=\"mdc-list-item__text\">" +
+
+                                        data.urls[i].label + "</span>\n  </a>");
+
+                                }
+                            });
+                        })).
+
+                then(function() {
+                    mdc.autoInit();
+                    $(".url--progress").
+                    get(0).
+                    MDCLinearProgress.close();
                 });
             }
         });
